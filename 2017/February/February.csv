@@ -1,0 +1,57 @@
+Seq. #,Time,Description,Operator,Entry Location/ Bus Route,Exit Location,Product,Rem. Rides,Change (+/-),Balance
+1,02/01/17 08:21:16 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$11.50
+2,02/01/17 08:49:23 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$8.45
+3,02/01/17 04:47:02 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$8.45
+4,02/01/17 04:59:00 PM,Exit,Metrorail,L'Enfant Plza N,Crystal City,StoredValue FF,,($2.15),$6.30
+5,02/06/17 08:26:19 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$6.30
+6,02/06/17 09:17:18 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$3.25
+7,02/06/17 06:30:37 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$3.25
+9,02/07/17 08:26:45 AM,Sale,Metrorail,Tenleytown-AU,,StoredValue FF,,$30.00,$31.10
+10,02/07/17 08:27:05 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$31.10
+11,02/07/17 08:51:23 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$28.05
+12,02/07/17 05:18:16 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$28.05
+13,02/07/17 05:42:16 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$25.00
+14,02/08/17 08:23:27 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$25.00
+15,02/08/17 08:46:59 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$21.95
+0,02/08/17 05:42:53 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$21.95
+1,02/08/17 06:06:56 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$18.90
+2,02/09/17 08:43:05 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$18.90
+3,02/09/17 09:06:03 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$15.85
+4,02/09/17 05:32:17 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$15.85
+5,02/09/17 06:01:32 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$12.80
+6,02/13/17 08:25:09 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$12.80
+7,02/13/17 08:50:06 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$9.75
+8,02/13/17 05:39:05 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$9.75
+9,02/13/17 05:45:16 PM,Exit,Metrorail,L'Enfant Plza N,Gal Pl-Chntwn N,StoredValue FF,,($2.15),$7.60
+10,02/14/17 08:18:41 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$7.60
+11,02/14/17 08:41:49 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$4.55
+12,02/14/17 04:42:10 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$4.55
+13,02/14/17 05:08:17 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$1.50
+14,02/14/17 05:08:58 PM,Sale,Metrorail,Tenleytown-AU,,StoredValue FF,,$30.00,$31.50
+15,02/15/17 08:39:03 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$31.50
+0,02/15/17 09:03:27 AM,Exit,Metrorail,,L'Enfant Plza N,StoredValue FF,,($3.05),$28.45
+1,02/15/17 05:44:54 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$28.45
+2,02/15/17 06:11:08 PM,Exit,Metrorail,L'Enfant Plza N,Ballston,StoredValue FF,,($3.05),$25.40
+3,02/16/17 08:37:22 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$25.40
+4,02/16/17 09:04:24 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$22.35
+5,02/16/17 05:51:53 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$22.35
+6,02/16/17 06:29:47 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$19.30
+7,02/21/17 08:32:20 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$19.30
+8,02/21/17 09:03:09 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$16.25
+9,02/21/17 04:59:21 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$16.25
+10,02/21/17 05:25:26 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$13.20
+11,02/22/17 08:57:35 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$13.20
+12,02/22/17 09:21:39 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$10.15
+13,02/22/17 05:23:36 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$10.15
+14,02/22/17 05:46:55 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$7.10
+15,02/23/17 08:35:22 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$7.10
+0,02/23/17 09:03:00 AM,Exit,Metrorail,,L'Enfant Plza N,StoredValue FF,,($3.05),$4.05
+1,02/23/17 05:20:05 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$4.05
+2,02/23/17 05:54:19 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$1.00
+3,02/27/17 09:02:06 AM,Sale,Metrorail,Tenleytown-AU,,StoredValue FF,,$30.00,$31.00
+4,02/27/17 09:02:39 AM,Entry,Metrorail,Tenleytown-AU,,StoredValue FF,,$0.00,$31.00
+5,02/27/17 09:30:58 AM,Exit,Metrorail,Tenleytown-AU,L'Enfant Plza N,StoredValue FF,,($3.05),$27.95
+6,02/27/17 06:08:11 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$27.95
+7,02/27/17 06:25:11 PM,Exit,Metrorail,L'Enfant Plza N,Crystal City,StoredValue FF,,($2.15),$25.80
+8,02/28/17 05:03:58 PM,Entry,Metrorail,L'Enfant Plza N,,StoredValue FF,,$0.00,$25.80
+9,02/28/17 05:24:28 PM,Exit,Metrorail,L'Enfant Plza N,Tenleytown-AU,StoredValue FF,,($3.05),$22.75
