@@ -20,6 +20,7 @@
             .padding(0.1);
         var y = d3.scaleLinear()
             .range([height,0]);
+        var color = d3.scaleOrdinal(d3.schemeCategory10)
 
         d3.csv('wmata.csv', (err,data) => {
             if (err) throw(err);
@@ -33,40 +34,54 @@
 
             var nested = d3.nest()
                 //.key((d) => (d.Time.getMonth()+1) + '/' + d.Time.getFullYear() )
-                .key((d) => d.Time.getDay() )
                 .key((d) => d.Time.getFullYear())
+                .key((d) => d.Time.getMonth())
+                .key((d) => d.Time.getDay())
                 .rollup((d) => d.length)
                 .entries(data);
 
             nested.forEach((d) => {
                 var value = 0;
-                d.values.forEach((v) => value += v.value);
+                d.values.forEach((v) => {
+                    var vValue = 0;
+                    v.values.forEach((k) => vValue += k.value)
+                    v.value = vValue;
+                    value += v.value
+                });
                 d.value = value;
             });
                 console.log(nested)
             x.domain(d3.extent(data, (d) => d.Time));
             xBand.domain(nested.map((d) => d.key))
-            // y.domain(d3.extent(data, (d) => d.Balance));
-            y.domain([0,d3.max(nested, (d) => d.value)]);
-
-            // svg.append('g')
-            //     .attr('transform', 'translate(0,' + height + ')')
-            //     .call(d3.axisBottom(x))
             svg.append('g')
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(d3.axisBottom(xBand))
+                
+            createBars(nested);
+
+        });
+        function createBars(data) {
+            y.domain([0,d3.max(data, (d) => d.value)]);
             svg.append('g')
                 .call(d3.axisLeft(y));
 
-            svg.selectAll('rect')
-                .data(nested)
-                .enter().append('rect')
-                .attr('x',(d) => xBand(d.key))
+            var bars = svg.selectAll('g.bars')
+                .data(data)
+                .enter().append('g')
+                .attr('class', 'bars')
+                .attr('transform', (d) => 'translate(' + [xBand(d.key), 0] + ')');
+            var stack = bars.selectAll('g.stack')
+                .data((d) => d.values)
+                .enter().append('g')
+                .attr('class', 'stack')
+            
+            stack.append('rect')
+                .attr('x', 0)
                 .attr('y',(d) => y(d.value))
                 .attr('height', (d) => height - y(d.value))
-                .attr('width', xBand.bandwidth());
-
-        });
+                .attr('width', xBand.bandwidth())
+                .attr('fill', (d) => {console.log(d); return color(d.key); });
+        }
     </script>
     
 </body>
