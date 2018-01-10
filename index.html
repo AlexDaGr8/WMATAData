@@ -7,7 +7,6 @@
             width = 960 - margin.right - margin.left,
             height = 500 - margin.top - margin.bottom;
         var svg = d3.select('body').append('svg')
-            .style('background', '#777')
             .style('margin', '0 calc(50% - ' + (width + margin.right + margin.left)/2 + 'px)')
             .attr('width', width + margin.right + margin.left)
             .attr('height', height + margin.top + margin.bottom)
@@ -27,6 +26,42 @@
                     -d.Change.match(/\d{1,2}\.\d+/g) : 
                     +d.Change.match(/\d{1,2}\.\d+/g);
             });
+
+            var legend = svg.append('g')
+                .selectAll('g.legend-item')
+                .data(['2016','2017'])
+                .enter().append('g')
+                .attr('class', 'legend-item')
+                .on('mouseover', (d) => {
+                    d3.selectAll('rect.bar' + d).style('opacity', 0.5);
+                    d3.select('.line' + d).attr('stroke-width', 5);
+                    legend.select('.item' + d)
+                        .attr('x', -1)
+                        .attr('y', (d,i) => (i*20) - 1)
+                        .attr('width', 17)
+                        .attr('height', 17)
+                })
+                .on('mouseout', (d) => {
+                    d3.selectAll('rect.bar' + d).style('opacity', 1);
+                    d3.select('.line' + d).attr('stroke-width', 2);
+                    legend.select('.item' + d)
+                        .attr('x', 0)
+                        .attr('y', (d,i) => (i*20))
+                        .attr('width', 15)
+                        .attr('height', 15)
+                });
+            legend.append('rect')
+                .attr('class', (d) => 'item' + d)
+                .attr('x', 0)
+                .attr('y', (d,i) => i* 20)
+                .attr('height', 15)
+                .attr('width', 15)
+                .attr('fill', (d) => color(d))
+            legend.append('text')
+                .text((d) => d)
+                .attr('x', 20)
+                .attr('y', (d,i) => (i * 20) + 12.5)
+
             var nested = d3.nest()
                 .key((d) => (d.Time.getMonth()+1) + '/' + d.Time.getDate() + '/' + d.Time.getFullYear() )
                 .rollup((d) => d.length)
@@ -45,8 +80,6 @@
                 d.values.forEach((v) => value += v.value);
                 d.value = value;
             })
-
-            console.log(bars)
                 
             createBars(bars);
 
@@ -119,6 +152,7 @@
             var line = d3.lineRadial()
                 .angle((d) => xR(d.key))
                 .radius((d) => yR(d.value))
+                .curve(d3.curveCatmullRom)
             xR.domain([new Date('1/1/2016'), new Date('12/31/2016')]);
             yR.domain(d3.extent(data,(d) => d.value));
 
@@ -127,7 +161,7 @@
                 .attr('class', 'line2016')
                 .attr('fill', 'none')
                 .attr('stroke', color('2016'))
-                .attr('stroke-width', 3)
+                .attr('stroke-width', 2)
                 .attr('d', line)
                 .on('mouseover', (d) => {
                     d3.selectAll('.bar2016').style('opacity', 0.5);
@@ -140,7 +174,7 @@
                 .attr('class', 'line2017')
                 .attr('fill', 'none')
                 .attr('stroke', color('2017'))
-                .attr('stroke-width', 3)
+                .attr('stroke-width', 2)
                 .attr('d', line)
                 .on('mouseover', (d) => {
                     d3.selectAll('.bar2017').style('opacity', 0.5);
@@ -169,7 +203,7 @@
                 .attr("y", (d) => -yR(d))
                 .attr("dy", "0.35em")
                 .attr("fill", "none")
-                .attr("stroke", "#777")
+                .attr("stroke", "#fff")
                 .attr("stroke-width", 5)
                 .attr("stroke-linejoin", "round")
                 .text((d) => d);
@@ -206,13 +240,13 @@
                 .append('text')
                 .attr('dy', '-0.2em')
                 .attr('text-anchor', 'middle')
-                .text('Metro')
+                .text('Metro Data')
 
             var subTitle = g.append('text')
                 .attr('dy', '1em')
                 .attr('text-anchor', 'middle')
                 .attr('opacity', 0.6)
-                .text('16/17')
+                .text('2016-2017')
             
             var lineLength = linePlot.node().getTotalLength();
 
