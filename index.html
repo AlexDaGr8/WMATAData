@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <body>
     <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="d3-scale-radial.js"></script>
     <script>
         var margin = { top: 20, right: 20, bottom: 30, left: 30},
             width = 960 - margin.right - margin.left,
@@ -13,14 +14,9 @@
             .append('g')
             .attr('transform', 'translate('+[margin.left,margin.top]+')');
 
-        var x = d3.scaleTime()
-            .range([0,width]);
-        var xBand = d3.scaleBand()
-            .range([0,width])
-            .padding(0.1);
-        var y = d3.scaleLinear()
-            .range([height,0]);
-        var color = d3.scaleOrdinal(d3.schemeCategory10)
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        var formatMonth = d3.timeFormat("%b");
 
         d3.csv('wmata.csv', (err,data) => {
             if (err) throw(err);
@@ -31,56 +27,214 @@
                     -d.Change.match(/\d{1,2}\.\d+/g) : 
                     +d.Change.match(/\d{1,2}\.\d+/g);
             });
-
             var nested = d3.nest()
-                //.key((d) => (d.Time.getMonth()+1) + '/' + d.Time.getFullYear() )
-                .key((d) => d.Time.getFullYear())
-                .key((d) => d.Time.getMonth())
-                .key((d) => d.Time.getDay())
+                .key((d) => (d.Time.getMonth()+1) + '/' + d.Time.getDate() + '/' + d.Time.getFullYear() )
                 .rollup((d) => d.length)
                 .entries(data);
 
-            nested.forEach((d) => {
+            RadialChart(nested);
+
+             var bars = d3.nest()
+                .key((d) => d.Time.getFullDay())
+                .key((d) => d.Time.getFullYear())
+                .rollup((d) => d.length)
+                .entries(data);
+
+            bars.forEach((d) => {
                 var value = 0;
-                d.values.forEach((v) => {
-                    var vValue = 0;
-                    v.values.forEach((k) => vValue += k.value)
-                    v.value = vValue;
-                    value += v.value
-                });
+                d.values.forEach((v) => value += v.value);
                 d.value = value;
-            });
-                console.log(nested)
-            x.domain(d3.extent(data, (d) => d.Time));
-            xBand.domain(nested.map((d) => d.key))
-            svg.append('g')
-                .attr('transform', 'translate(0,' + height + ')')
-                .call(d3.axisBottom(xBand))
+            })
+
+            console.log(bars)
                 
-            createBars(nested);
+            createBars(bars);
 
         });
         function createBars(data) {
+            var barWidth = width * .55;
+            var smBarWidth = width * .45;
+            var g = svg.append('g')
+                .attr('transform', 'translate(' + barWidth + ',0)')
+
+            var xBand = d3.scaleBand()
+                .range([0,smBarWidth])
+                .padding(0.1);
+            var y = d3.scaleLinear()
+                .range([height,0]);
+
+            xBand.domain(data.map((d) => d.key))
             y.domain([0,d3.max(data, (d) => d.value)]);
-            svg.append('g')
+
+            g.append('g')
+                .attr('transform', 'translate(' + 0 + ',' + height + ')')
+                .call(d3.axisBottom(xBand))
+            g.append('g')
                 .call(d3.axisLeft(y));
 
-            var bars = svg.selectAll('g.bars')
+            var bars = g.selectAll('g.bar')
                 .data(data)
                 .enter().append('g')
-                .attr('class', 'bars')
-                .attr('transform', (d) => 'translate(' + [xBand(d.key), 0] + ')');
-            var stack = bars.selectAll('g.stack')
+                .attr('class', 'bar')
+                .attr('transform', (d) => 'translate(' + xBand(d.key) + ',0)');
+
+            var stck = 0;
+            bars.append('g')
+                .selectAll('rect')
                 .data((d) => d.values)
-                .enter().append('g')
-                .attr('class', 'stack')
-            
-            stack.append('rect')
+                .enter().append('rect')
+                .attr('class', (d) => 'bar' + d.key)
                 .attr('x', 0)
-                .attr('y',(d) => y(d.value))
+                .attr('y', (d,i) => {
+                    stck = i==0 ? d.value : stck + d.value;
+                    return y(stck);
+                })
                 .attr('height', (d) => height - y(d.value))
                 .attr('width', xBand.bandwidth())
-                .attr('fill', (d) => {console.log(d); return color(d.key); });
+                .attr('fill', (d) => color(d.key))
+                .on('mouseover', (d) => {
+                    d3.select('.line' + d.key).attr('stroke-width', 5)
+                })
+                .on('mouseout', (d) => {
+                    d3.select('.line' + d.key).attr('stroke-width', 3)
+                });
+        }
+        function RadialChart(data) {
+            var g = svg.append('g')
+                .attr('transform', 'translate(' + width / 4 + ',' + height / 2 + ')')
+
+            data.forEach((d) => {
+                d.key = new Date(d.key);
+            })
+            var year1 = data.filter((d) => d.key.getFullYear() == '2016')
+            var year2 = data.filter((d) => d.key.getFullYear() == '2017')
+
+            var fullCircle = 2 * Math.PI;
+            var innerRadius = 100,
+                outerRadius = Math.min(width, height) / 2 - 6;
+            var xR = d3.scaleTime()
+                .range([0, fullCircle]);
+            var yR = d3.scaleRadial()
+                .range([innerRadius, outerRadius]);
+            var line = d3.lineRadial()
+                .angle((d) => xR(d.key))
+                .radius((d) => yR(d.value))
+            xR.domain([new Date('1/1/2016'), new Date('12/31/2016')]);
+            yR.domain(d3.extent(data,(d) => d.value));
+
+            var linePlot = g.append('path')
+                .datum(year1)
+                .attr('class', 'line2016')
+                .attr('fill', 'none')
+                .attr('stroke', color('2016'))
+                .attr('stroke-width', 3)
+                .attr('d', line)
+                .on('mouseover', (d) => {
+                    d3.selectAll('.bar2016').style('opacity', 0.5);
+                })
+                .on('mouseout', (d) => {
+                    d3.selectAll('.bar2016').style('opacity', 1);
+                })
+            var linePlot2 = g.append('path')
+                .datum(year2)
+                .attr('class', 'line2017')
+                .attr('fill', 'none')
+                .attr('stroke', color('2017'))
+                .attr('stroke-width', 3)
+                .attr('d', line)
+                .on('mouseover', (d) => {
+                    d3.selectAll('.bar2017').style('opacity', 0.5);
+                })
+                .on('mouseout', (d) => {
+                    d3.selectAll('.bar2017').style('opacity', 1);
+                })
+
+            var yAxis = g.append('g')
+                .attr('text-anchor', 'middle');
+            var yTick = yAxis.selectAll('g')
+                .data(yR.ticks(5))
+                .enter().append('g')
+            yTick.append('circle')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('opacity', 0.2)
+                .attr('r', yR)
+            yAxis.append('circle')
+                .attr('fill', 'none')
+                .attr('stroke', 'black')
+                .attr('opacity', 0.2)
+                .attr('r', () => yR(yR.domain()[0]))
+
+            var labels = yTick.append('text')
+                .attr("y", (d) => -yR(d))
+                .attr("dy", "0.35em")
+                .attr("fill", "none")
+                .attr("stroke", "#777")
+                .attr("stroke-width", 5)
+                .attr("stroke-linejoin", "round")
+                .text((d) => d);
+
+            yTick.append('text')
+                .attr('y', (d) => -yR(d))
+                .attr('dy', '0.35em')
+                .text((d) => d)
+
+            var xAxis = g.append('g')
+
+            
+            var xTick = xAxis.selectAll('g')
+                .data(xR.ticks(12))
+                .enter().append('g')
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', (d) => 'rotate(' + ((xR(d)) * 180 / Math.PI - 90) + ')translate(' + innerRadius + ',0)')
+
+            xTick.append('line')
+                .attr('x2', -5)
+                .attr('stroke', '#000')
+
+            xTick.append('text')
+                .attr('transform',(d) => {
+                    var angle = xR(d);
+                    var bottom = Math.PI / 2;
+                    var top = Math.PI * 3 / 2;
+                    return angle < bottom || angle > top ? 'rotate(90)translate(0,22)' : 'rotate(-90)translate(0,-15)'
+                })
+                .text((d) => formatMonth(d))
+
+            var title = g.append('g')
+                .attr('class', 'title')
+                .append('text')
+                .attr('dy', '-0.2em')
+                .attr('text-anchor', 'middle')
+                .text('Metro')
+
+            var subTitle = g.append('text')
+                .attr('dy', '1em')
+                .attr('text-anchor', 'middle')
+                .attr('opacity', 0.6)
+                .text('16/17')
+            
+            var lineLength = linePlot.node().getTotalLength();
+
+            linePlot
+                .attr('stroke-dasharray', lineLength + ' ' + lineLength)
+                .attr('stroke-dashoffset', -lineLength)
+                .transition()
+                    .duration(2000)
+                    .ease(d3.easeLinear)
+                    .attr('stroke-dashoffset', 0)
+            linePlot2
+                .attr('stroke-dasharray', lineLength + ' ' + lineLength)
+                .attr('stroke-dashoffset', -lineLength)
+                .transition()
+                    .duration(2000)
+                    .ease(d3.easeLinear)
+                    .attr('stroke-dashoffset', 0)
+        }
+
+        Date.prototype.getFullDay = function() {
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wedensday', 'Thursday', 'Friday', 'Saturday'];
+            return days[this.getDay()];
         }
     </script>
     
